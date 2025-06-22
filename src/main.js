@@ -1,3 +1,4 @@
+main
 import {createApp} from 'vue'
 import './styles.css'
 import i18n from "./i18n.js";
@@ -6,7 +7,7 @@ import 'primeflex/primeflex.css';
 import 'primeicons/primeicons.css';
 import Material from '@primeuix/themes/material';
 import {
-    Button,
+    Button, Calendar,
     Card,
     Checkbox,
     Column,
@@ -15,7 +16,7 @@ import {
     DataTable,
     Dialog,
     DialogService,
-    Drawer,
+    Drawer, Dropdown,
     FileUpload,
     FloatLabel,
     IconField,
@@ -68,5 +69,7 @@ app.use(i18n)
     .component('pv-textarea',       Textarea)
     .component('pv-toolbar',        Toolbar)
     .component('pv-toast',          Toast)
+    .component('pv-calendar',        Calendar)
+    .component('pv-dropdown',        Dropdown)
     .use(router)
     .mount('#app')
