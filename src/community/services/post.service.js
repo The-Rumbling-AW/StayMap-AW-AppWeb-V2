@@ -1,4 +1,4 @@
-import httpInstance from "../../../../../../Desktop/pruebitatb/src/shared/services/http.instance.js";
+import httpInstance from "@/shared/services/http.instance.js";
 
 /**
  * @class PostService
