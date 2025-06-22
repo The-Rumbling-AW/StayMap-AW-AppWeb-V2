@@ -21,7 +21,7 @@ export default {
       isEdit: false,
       submitted: false,
       selectedGenres: [],
-      genres: ["Pop", "Rock", "K-pop", "Indie", "Urbano", "Electrónica", "Salsa", "Cumbia", "Jazz"],
+      genres: ["Pop", "Rock", "K-pop", "Indie", "Urbano", "ElectrÃ³nica", "Salsa", "Cumbia", "Jazz"],
       currentUser: null
     };
   },
@@ -73,35 +73,65 @@ export default {
     },
     onSaveRequested(item) {
       this.submitted = true;
-      if (this.concert.artistName.trim()) {
+      if (item.artistName && item.artistName.trim()) {
         if (item.id) {
-          this.updateConcert();
+          this.updateConcert(item);
         } else {
-          this.createConcert();
+          this.createConcert(item);
         }
         this.createAndEditDialogIsVisible = false;
         this.isEdit = false;
       }
     },
-    createConcert() {
-      const dataToSend = { ...this.concert };
-      if (!dataToSend.id || dataToSend.id === '') {
-        delete dataToSend.id;
-      }
-      this.concertService.create(dataToSend).then(response => {
-        let concert = new Concert(response.data);
+    createConcert(item) {
+      const concertToSend = {
+        id: item.id,
+        artist: [{ name: item.artistName, genre: item.genre }],
+        image: item.image,
+        description: item.description,
+        date: item.date,
+        venue: {
+          name: item.venueName,
+          address: item.venueAddress,
+          location: {
+            lat: 0,
+            lng: 0
+          }
+        },
+        status: item.status || 'Disponible'
+      };
+
+      this.concertService.create(concertToSend).then(response => {
+        const concert = new Concert(response.data);
         this.concerts.push(concert);
-        this.notifySuccessfulAction("concert Created");
+        this.notifySuccessfulAction("Concierto creado correctamente");
       }).catch(error => {
-        console.error('Error al crear concert ', error);
+        console.error('Error al crear el concierto', error);
       });
     },
-    updateConcert() {
-      this.concertService.update(this.concert.id, this.concert).then(response => {
-        let index = this.findIndexById(this.concert.id);
+    updateConcert(item) {
+      const updatedConcert = {
+        id: item.id,
+        artist: [{ name: item.artistName, genre: item.genre }],
+        image: item.image,
+        description: item.description,
+        date: item.date,
+        venue: {
+          name: item.venueName,
+          address: item.venueAddress,
+          location: {
+            lat: 0,
+            lng: 0
+          }
+        },
+        status: item.status || 'Disponible'
+      };
+
+      this.concertService.update(item.id, updatedConcert).then(response => {
+        const index = this.findIndexById(item.id);
         this.concerts[index] = new Concert(response.data);
-        this.notifySuccessfulAction("concert Updated");
-      }).catch(error => console.error(error));
+        this.notifySuccessfulAction("Concierto actualizado");
+      }).catch(error => console.error('Error al actualizar', error));
     },
     deleteConcert() {
       this.concertService.delete(this.concert.id).then(() => {
